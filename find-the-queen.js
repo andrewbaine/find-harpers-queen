@@ -22,10 +22,8 @@ function makeBoard(n) {
 
 let blank = '.';
 
-function printBoard(board) {
-  board = board.slice(1, board.length - 1);
-  print(
-    board.map(row => {
+let boardToString =
+    board => board.slice(1, board.length - 1).map(row => {
       row = row.slice(1, row.length - 1);
       return '   ' + row.map(n => {
         if (n == 5) {
@@ -36,8 +34,10 @@ function printBoard(board) {
           return blank;
         }
       }).join(' ');
-      
-    }).join("\n"));
+    }).join("\n");
+
+function printBoard(board) {
+  print(boardToString(board));
 }
 
 function placeFirstPiece(board, piece){
@@ -76,20 +76,6 @@ function placeOtherPieces(board, piece) {
   }
 }
 
-let board = makeBoard(boardSize);
-
-
-let pieces = [1, 1, 1, 1, 1, 1, 1];
-let queenPosition = pickRandomNumber(pieces.length);
-pieces[queenPosition] = 5;
-
-placeFirstPiece(board, pieces[0]);
-for (let i = 1; i < pieces.length; i++) {
-  placeOtherPieces(board, pieces[i]);
-}
-
-//printBoard(board);
-
 function makeGuesses(n) {
   let guesses = [];
   for (let i = 0; i < n; i++) {
@@ -103,39 +89,24 @@ function makeGuesses(n) {
   return guesses;
 }
 
-function printGuesses(guesses) {
+function guessToString(guesses) {
   let headerLine = "   " + guesses.map((g, i) => 'ABCDEFGHIJ'.charAt(i)).join(' ');
 
-let guessesLines = 
-  (guesses.map((row, i) => {
-    return ((i + 1) < 10 ? ' ' + (i + 1) : (i + 1)) + row.map(n => {
-      if (n == -1) {
-        return ' .';
-      } else if (n > 9) {
-        return n;
-      } else {
-        return ' ' + n;
-      }
-    }).join('');
-  }).join('\n'));
-
+  let guessesLines = 
+      (guesses.map((row, i) => {
+        return ((i + 1) < 10 ? ' ' + (i + 1) : (i + 1)) + row.map(n => {
+          if (n == -1) {
+            return ' .';
+          } else if (n > 9) {
+            return n;
+          } else {
+            return ' ' + n;
+          }
+        }).join('');
+      }).join('\n'));
+  
   return headerLine + '\n' + guessesLines;
 }
-
-let guesses = makeGuesses(boardSize);
-printGuesses(guesses);
-
-
-function takeGuess(board, guesses) {
-  
-}
-
-
-let readline = require('readline');
-let rl = readline.createInterface({
-  input: process.stdin,
-  output: process.stdout
-});
 
 function computeTotal(board, row, column) {
   let total = 0;
@@ -155,12 +126,11 @@ function printSolution(board) {
   printBoard(board);
 }
 
-function takeGuess() {
+function takeGuess(rl, board, guesses) {
   console.clear();
-//  printBoard(board);
   print("\n");
-  print(printGuesses(guesses));
-  print("\n\n");
+  print(guessToString(guesses));
+  print("\n");
   rl.question("enter your guess: ", answer => {
     print("\n");
     answer = answer.replaceAll(' ', '').toUpperCase();
@@ -174,9 +144,31 @@ function takeGuess() {
     } else {
       let total = computeTotal(board, row, col);
       guesses[row - 1][col - 1] = total;
-      takeGuess();
+      takeGuess(rl, board, guesses);
     }
   });
 }
 
-takeGuess();
+function play() {
+  let board = makeBoard(boardSize);
+  let pieces = [1, 1, 1, 1, 1, 1, 1];
+  let queenPosition = pickRandomNumber(pieces.length);
+  pieces[queenPosition] = 5;
+  
+  placeFirstPiece(board, pieces[0]);
+  for (let i = 1; i < pieces.length; i++) {
+    placeOtherPieces(board, pieces[i]);
+  }
+  
+  let guesses = makeGuesses(boardSize);
+  
+  let readline = require('readline');
+  let rl = readline.createInterface({
+    input: process.stdin,
+    output: process.stdout
+  });
+  takeGuess(rl, board, guesses);
+  
+}
+
+play();
