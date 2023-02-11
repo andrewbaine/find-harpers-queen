@@ -1,0 +1,33 @@
+
+.board {
+    margin: 30px;
+    padding: 10px;
+}
+
+.cell-white, .cell-dark {
+    display: table-cell;
+    width: 40px;
+    height: 40px;
+    outline: 1px solid;
+    vertical-align: middle;
+    text-align: center;
+    border: 1px solid gray;
+    border-collapse: collapse;
+}
+
+.cell-dark {
+    background-color: white;
+}
+
+.cell-white {
+    background-color: lightblue;
+}
+
+.cell-dark.queen, .cell-white.queen {
+    background-color: lightgreen;
+}
+
+.cell-dark.knight, .cell-white.knight {
+    background-color: lightgray;
+}
+
