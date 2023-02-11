@@ -1,13 +1,26 @@
 
-let boardSize = 10;
+let print = console.log;
+
+const QUEEN = 5;
 
 function pickRandomNumber(n) {
   return Math.floor(n * Math.random());
 }
 
-let print = console.log;
 
-function makeBoard(n) {
+
+function initBoard(board) {
+  let pieces = [1, 1, 1, 1, 1, 1, 1];
+  let queenPosition = pickRandomNumber(pieces.length);
+  pieces[queenPosition] = QUEEN;
+  
+  placeFirstPiece(board, pieces[0]);
+  for (let i = 1; i < pieces.length; i++) {
+    placeOtherPieces(board, pieces[i]);
+  }
+}
+
+export function makeBoard(n) {
   let board = [];
   n = n + 2;
   for (let r = 0; r < n; r++) {
@@ -17,12 +30,13 @@ function makeBoard(n) {
       row.push(0);
     }
   }
+  initBoard(board);
   return board;
 }
 
 let blank = '.';
 
-let boardToString =
+export let boardToString =
     board => board.slice(1, board.length - 1).map(row => {
       row = row.slice(1, row.length - 1);
       return '   ' + row.map(n => {
@@ -55,7 +69,6 @@ function isEmptySquare(board, row, column) {
 }
 
 function isTouchingAnotherPiece(board, row, column) {
-
   for (let i = row - 1; i < row + 2; i++) {
     for (let j = column - 1; j < column + 2; j++) {
       if (board[i][j] != 0) {
@@ -76,7 +89,7 @@ function placeOtherPieces(board, piece) {
   }
 }
 
-function makeGuesses(n) {
+export function makeGuesses(n) {
   let guesses = [];
   for (let i = 0; i < n; i++) {
     let row = [];
@@ -110,8 +123,8 @@ function guessToString(guesses) {
 
 function computeTotal(board, row, column) {
   let total = 0;
-  for (let i = row - 1; i < row + 2; i++) {
-    for (let j = column - 1; j < column + 2; j++) {
+  for (let i = row; i < row + 3; i++) {
+    for (let j = column; j < column + 3; j++) {
       total = total + board[i][j];
     }
   }
@@ -126,13 +139,32 @@ function printSolution(board) {
   printBoard(board);
 }
 
+function printNewLine() {
+  print("\n");
+}
+
+export const guess = (board, guesses, i, j) => guesses
+  .map((row, a) => (a != i) ? row : row.map((cell, b) => (b != j) ? cell : computeTotal(board, i, j)));
+
+export const getSolution = board => {
+  for (let i = 0; i < board.length; i++) {
+    let row = board[i];
+    for (let j = 0; j < row.length; j++) {
+      if (row[j] == QUEEN) {
+        return [i - 1, j - 1];
+      }
+    }
+  }
+};
+                    
+
 function takeGuess(rl, board, guesses) {
   console.clear();
-  print("\n");
+  printNewLine();
   print(guessToString(guesses));
-  print("\n");
+  printNewLine();
   rl.question("enter your guess: ", answer => {
-    print("\n");
+    printNewLine();
     answer = answer.replaceAll(' ', '').toUpperCase();
     let col = 1 + "ABCDEFGHIJKLMNOPQRSTUVWXYZ".indexOf(answer.charAt(0));
     let row = parseInt(answer.substring(1));
@@ -149,17 +181,12 @@ function takeGuess(rl, board, guesses) {
   });
 }
 
+/* 
 function play() {
+  let boardSize = 10;
+  
   let board = makeBoard(boardSize);
-  let pieces = [1, 1, 1, 1, 1, 1, 1];
-  let queenPosition = pickRandomNumber(pieces.length);
-  pieces[queenPosition] = 5;
-  
-  placeFirstPiece(board, pieces[0]);
-  for (let i = 1; i < pieces.length; i++) {
-    placeOtherPieces(board, pieces[i]);
-  }
-  
+  initBoard(board);
   let guesses = makeGuesses(boardSize);
   
   let readline = require('readline');
@@ -172,3 +199,5 @@ function play() {
 }
 
 play();
+*/
+
