@@ -6,8 +6,8 @@
 
 .cell-white, .cell-dark {
     display: table-cell;
-    width: 30px;
-    height: 30px;
+    width: 36px;
+    height: 36px;
     outline: 1px solid;
     vertical-align: middle;
     text-align: center;
