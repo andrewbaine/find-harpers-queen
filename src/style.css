@@ -4,29 +4,36 @@
     padding: 5px;
 }
 
-.cell-white, .cell-dark {
-    display: table-cell;
-    width: 36px;
-    height: 36px;
-    outline: 1px solid;
-    vertical-align: middle;
-    text-align: center;
-    border: 1px solid gray;
+table {
     border-collapse: collapse;
 }
 
-.cell-dark {
+th {
+    padding-right: 5px;
+    padding-bottom: 1px;
+}
+
+.cell {
+    border: 1px solid black;
+    width: 36px;
+    height: 36px;
+    vertical-align: middle;
+    text-align: center;
+    cursor: pointer;
+}
+
+.dark {
     background-color: white;
 }
 
-.cell-white {
+.white {
     background-color: lightblue;
 }
 
-.cell-dark.queen, .cell-white.queen {
+.queen {
     background-color: lightgreen;
 }
 
-.cell-dark.knight, .cell-white.knight {
+.knight {
     background-color: lightgray;
 }

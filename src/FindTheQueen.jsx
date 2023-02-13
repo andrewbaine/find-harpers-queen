@@ -15,10 +15,11 @@ const Board = (props) => {
   let n = board.length - 2;
   const rows = [];
   for (let i = 0; i < n; i++) {
-    const cells = [];
+    const cells = [<th>{i + 1}</th>];
     let oddI = i % 2;
     for (let j = 0; j < n; j++) {
-      let className = (oddI ? j % 2 : !(j % 2)) ? "cell-white" : "cell-dark";
+      let className = "cell";
+      className += (oddI ? j % 2 : !(j % 2)) ? " white" : " dark";
       if (isSolved) {
         if (board[i + 1][j + 1] == 1) {
           className += " knight";
@@ -33,21 +34,40 @@ const Board = (props) => {
         setGuesses(newGuesses);
       }
       ;
-      cells.push(<div className={className} key={j} onClick={onClick}>
+      cells.push(<td className={className} key={j} onClick={onClick}>
                      {
                        guesses[i][j] == -1 ? <>&nbsp;</> :
                        (board[i + 1][j + 1] == QUEEN ? "Q" : guesses[i][j])
                      }
-                 </div>);
+                 </td>);
     }
-    rows.push(<div key={i}>{cells}</div>);
+    rows.push(<tr key={i}>{cells}</tr>);
   }
-  const boardDiv = <div className={"board"}>{rows}</div>;
-  return <div>{boardDiv}</div>;
+  const boardTable = <table className={"board"}>
+                       <thead>
+                         <tr>
+                           <th />
+                           <th>A</th>
+                           <th>B</th>
+                           <th>C</th>
+                           <th>D</th>
+                           <th>E</th>
+                           <th>F</th>
+                           <th>G</th>
+                           <th>H</th>
+                           <th>I</th>
+                           <th>J</th>
+                         </tr>
+                       </thead>
+                       <tbody>
+                         {rows}
+                       </tbody>
+                     </table>;
+  return <div>{boardTable}</div>;
   
 }
 
-const FindTheQueen = () => {
+const App = () => {
   const n = 10;
   const [board, setBoard] = useState(makeBoard(n));
   const [guesses, setGuesses] = useState(makeGuesses(n));
@@ -56,4 +76,4 @@ const FindTheQueen = () => {
 }
 
 
-export default FindTheQueen;
+export default App;
