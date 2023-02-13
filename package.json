@@ -5,7 +5,8 @@
   "main": "find-the-queen.js",
   "scripts": {
     "build": "webpack --mode production",
-    "start": "webpack serve --mode development"
+    "start": "webpack serve --mode development",
+    "publish": "npm run build && gh-pages -d build"
   },
   "author": "",
   "license": "ISC",
